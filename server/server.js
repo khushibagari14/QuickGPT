@@ -1,4 +1,5 @@
-
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
 
@@ -17,7 +18,7 @@ await connectDB()
 
 // Stripe webhook route
 app.post('/api/stripe', express.raw({type: 'application/json'}),
-stripeWebhooks)
+ stripeWebhooks)
 
 // middleware
 app.use(cors())
