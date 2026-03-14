@@ -23,7 +23,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.0.0",
     "mongoose": "^9.2.1",
-    "openai": "^6.17.0",
+    "openai": "^6.29.0",
     "stripe": "^20.3.1",
     "svix": "^1.84.1"
   },

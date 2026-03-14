@@ -4,47 +4,42 @@ import User from "../models/User.js";
 
 // generate token
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
-};
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" })
+}
 
 // API REGISTER TO USER
 export const registerUser = async (req, res) => {
-  try {
+ 
     const { name, email, password } = req.body;
-
-    const userExists = await User.findOne({ email });
+  try {
+    const userExists = await User.findOne({ email })
     if (userExists) {
       return res.json({
         success: false,
         message: "User already exists",
-      });
+      })
     }
-    const user = await User.create({
-      name,
-      email,
-      password
-    });
+    const user = await User.create({name,email, password})
 
     const token = generateToken(user._id);
-
-    res.status(201).json({
+    res.json({
       success: true,
-      token,
-    });
+      token
+    })
   } catch (error) {
     return res.json({
       success: false,
       message: error.message,
-    });
+    })
   }
-};
+}
 
 // API TO LOGIN
 export const loginUser = async (req, res) => {
   
     const { email, password } = req.body;
   try{
-    const user = await User.findOne({ email });
+    const user = await User.findOne({email})
    if(user){
     const isMatch = await bcrypt.compare(password, user.password)
 
@@ -63,11 +58,11 @@ export const loginUser = async (req, res) => {
     return res.json({
       success: false,
       message: error.message,
-    });
+    })
   }
-};
+}
 
-// API TO GET USER (protected)
+// API TO GET USER DATA
 export const getUser = async (req, res) => {
   try{
     const user = req.user;
