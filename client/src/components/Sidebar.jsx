@@ -6,9 +6,18 @@ import { useNavigate } from 'react-router-dom'
 
 const Sidebar = ( { isMenuOpen , setIsMenuOpen}) => {
    
-  const {chats, setSelectedChat, theme, setTheme, user} = useAppContext()  
+  const {chats, setSelectedChat, theme, setTheme, user , createNewChat,
+    axios,setChats,fetchUsersChats, setToken} = useAppContext()  
   const [search , setSearch] = useState('')
-  const navigate = useNavigate()  
+  const navigate = useNavigate() 
+  
+  const logout = () =>{
+    localStorage.removeItem('token')
+    setToken(null)
+    toast.success('Logged out Successfully')
+  }
+
+  const deleteChat = async
 
   return (
    <div
@@ -125,7 +134,7 @@ const Sidebar = ( { isMenuOpen , setIsMenuOpen}) => {
   </p>
   
   {user && (
-    <img 
+    <img onClick={logout}
       src={assets.logout_icon} 
       className='h-5 cursor-pointer hidden invert dark:invert-0 group-hover:block' 
       alt="" />
