@@ -12,7 +12,7 @@ const Community = () => {
 
   const fetchImages = async () => {
     try{
-      const {data} = await axios.get('/api/message/published-images')
+      const {data} = await axios.get('/api/user/published-images')
       if(data.success){
       setImages(data.images)
       }else{

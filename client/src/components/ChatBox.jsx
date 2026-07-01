@@ -16,47 +16,71 @@ const ChatBox = () => {
   const [mode, setMode] = useState('text');
   const [isPublished, setIsPublished] = useState(false);
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    try {
-       e.preventDefault()
-       if(!user) return toast.error('Login to send message')
-       setLoading(true)
-      const promptcopy = prompt
-      setPrompt('')
-      setMessages(prev => [...prev,{role : 'user' ,content : prompt , timestamp : Date.now(), isImage : false}])
+ const onSubmit = async (e) => {
+  e.preventDefault();
 
-      const{data} = await axios.post('/api/message/${mode}',{chatId :
-        selectedChat._id, prompt , isPublished }, {headers : {'Authorization' : token}}
-      )
-      if(data.success){
-        setMessages(prev => [...prev, data.reply])
+  try {
+    if (!user) return toast.error("Login to send message");
 
-        // decrease credits
-        if(mode === 'image'){
-          setUser(prev => ({...prev, credits : prev.credits - 2}))
-        }else{
-          setUser(prev => ({...prev, credits : prev.credits - 1}))
+    setLoading(true);
 
-        }
-      }else{
-        toast.error(data.message)
-        setPrompt(promptcopy)
+    const promptcopy = prompt;
+    setPrompt("");
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "user",
+        content: promptcopy,
+        timestamp: Date.now(),
+        isImage: false,
+      },
+    ]);
+
+    const { data } = await axios.post(
+      `/api/message/${mode}`,
+      {
+        chatId: selectedChat._id,
+        prompt: promptcopy,
+        isPublished,
+      },
+      {
+        headers: {
+          Authorization: token,
+        },
       }
-    } catch (error){
-      toast.error(error.message)
-    } finally{
-      setPrompt('')
-      setLoading(false)
+    );
+
+    if (data.success) {
+      setMessages((prev) => [...prev, data.reply]);
+
+      if (mode === "image") {
+        setUser((prev) => ({
+          ...prev,
+          credits: prev.credits - 2,
+        }));
+      } else {
+        setUser((prev) => ({
+          ...prev,
+          credits: prev.credits - 1,
+        }));
+      }
+    } else {
+      toast.error(data.message);
+      setPrompt(promptcopy);
     }
-   
-  };
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     if (selectedChat) {
-      setMessages(selectedChat.messages);
+      setMessages(selectedChat.messages || []);
     }
-  }, [selectedChat])
+  }, [selectedChat?._id]);
 
   useEffect(()=>{
     if(containerRef.current){
